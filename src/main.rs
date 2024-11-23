@@ -410,27 +410,17 @@ async fn pumpfun(path: web::Path<(String, String)>) -> Result<HttpResponse> {
     }
 }
 
-// #[actix_web::main]
-// async fn main() -> std::io::Result<()> {
-//     HttpServer::new(|| {
-//         App::new()
-//             .service(raydium)
-//             .service(moonshot)
-//             .service(pumpfun)
-//             .route("/hey", web::get().to(|| async { "Hello there!" }))
-//     })
-//     .bind(("127.0.0.1", 8080))?
-//     .workers(4)
-//     .run()
-//     .await
-// }
-
-#[shuttle_runtime::main]
-async fn main() -> ShuttleActixWeb<impl FnOnce(&mut ServiceConfig) + Send + Clone + 'static> {
-    let config = move |cfg: &mut ServiceConfig| {
-        cfg.service(raydium);
-        cfg.service(moonshot);
-        cfg.service(pumpfun);
-    };
-    Ok(config.into())
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    HttpServer::new(|| {
+        App::new()
+            .service(raydium)
+            .service(moonshot)
+            .service(pumpfun)
+            .route("/hey", web::get().to(|| async { "Hello there!" }))
+    })
+    .bind(("127.0.0.1", 8080))?
+    .workers(4)
+    .run()
+    .await
 }
